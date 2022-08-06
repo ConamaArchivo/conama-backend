@@ -1,10 +1,8 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
-
-const PieceSchema = new Schema({
+const PieceSchema = new mongoose.Schema({
   title: { type: String, required: true, maxLength: 150 },
-  author: [
+  authors: [
     {
       name: { type: String, maxLength: 100 },
       surname: { type: String, maxLength: 100 },
@@ -18,7 +16,7 @@ const PieceSchema = new Schema({
   comment: { type: String, maxLength: 300 },
   versions: [
     {
-      arrangement_author: [
+      arr_authors: [
         {
           name: { type: String, maxLength: 100 },
           surname: { type: String, maxLength: 100 },

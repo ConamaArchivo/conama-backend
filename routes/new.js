@@ -1,19 +1,33 @@
 const express = require('express');
 const router = express.Router();
-const driveController = require('../controllers/driveController');
-const pieceController = require('../controllers/pieceController');
+const {
+  getFormFiles,
+  createThumbnails,
+  removeTmpFiles,
+} = require('../controllers/fileController');
+const {
+  uploadFilesToDrive,
+  getDrivePublicUrls,
+} = require('../controllers/driveController');
+const {createPiece} = require('../controllers/pieceController');
+const qs = require('qs');
 
 router.get('/', (req, res, next) => {
-  res.json("pieceList");
+  res.json('pieceList');
 });
 
 router.post(
   '/',
-  driveController.upload.single('pdf'),
-  driveController.createThumbnail,
-  driveController.uploadPDF,
-  driveController.getPublicUrl,
-  pieceController.pieceCreate
+  (req, res, next) => {
+    res.locals.parsedBody = qs.parse(req.body);
+    next();
+  },
+  getFormFiles,
+  createThumbnails,
+  uploadFilesToDrive,
+  getDrivePublicUrls,
+  removeTmpFiles,
+  createPiece,
 );
 
 module.exports = router;
