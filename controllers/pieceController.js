@@ -14,6 +14,66 @@ exports.pieceList = (req, res, next) => {
     });
 };
 
+exports.getAutoCompleteData = (req, res, next) => {
+  Piece.find({
+    // versions: { $elemMatch: { accompaniment: { $exists: true, $ne: [] } } },
+  })
+    .select({ versions: 1, genre: 1, authors: 1, _id: 0 })
+    .exec((error, data) => {
+      if (error) {
+        return next(error);
+      }
+      let arr_names = [];
+      let arr_surnames = [];
+      let accompaniments = [];
+      data.forEach((element1) => {
+        element1.versions.forEach((element2) => {
+          element2.accompaniment.forEach((element3) => {
+            accompaniments.push({ value: element3, label: element3 });
+          });
+
+          element2.arr_authors.forEach((element3) => {
+            arr_names.push(element3.name);
+            arr_surnames.push(element3.surname);
+          });
+        });
+      });
+
+      let genres = [];
+      data.forEach((element1) => {
+        element1.genre.forEach((element2) => {
+          genres.push({ value: element2, label: element2 });
+        });
+      });
+
+      let names = [];
+      let surnames = [];
+      data.forEach((element1) => {
+        element1.authors.forEach((element2) => {
+          names.push(element2.name);
+          surnames.push(element2.surname);
+        });
+      });
+
+      res.json({
+        names: [...new Set(names)].sort(),
+        surnames: [...new Set(surnames)].sort(),
+        arr_names: [...new Set(arr_names)].sort(),
+        arr_surnames: [...new Set(arr_surnames)].sort(),
+        genres: genres
+          .filter(
+            (key, i, self) => i === self.findIndex((t) => t.value === key.value)
+          )
+          .sort((a, b) => a.value.localeCompare(b.value)),
+        accompaniments: accompaniments
+          .filter(
+            (key, i, self) => i === self.findIndex((t) => t.value === key.value)
+          )
+          .sort((a, b) => a.value.localeCompare(b.value)),
+      });
+    });
+};
+
 exports.createPiece = (req, res, next) => {
   const { parsedBody } = res.locals;
   let data = {
@@ -33,11 +93,11 @@ exports.createPiece = (req, res, next) => {
   });
   parsedBody.versions.forEach((version, i) => {
     data.versions.push({});
-    data.versions[i].voices = {}
-    data.versions[i].files = {}
-    data.versions[i].files.pdf = {}
-    data.versions[i].files.quantity = {}
-    data.versions[i].files.location = {}
+    data.versions[i].voices = {};
+    data.versions[i].files = {};
+    data.versions[i].files.pdf = {};
+    data.versions[i].files.quantity = {};
+    data.versions[i].files.location = {};
     data.versions[i].arr_authors = [];
     if (version.arr_author) {
       version.arr_author.forEach((author) => {
@@ -47,17 +107,16 @@ exports.createPiece = (req, res, next) => {
       });
     }
     data.versions[i].voices.gender = version.gender;
-      data.versions[i].voices.num_of_voices = version.num_of_voices
-        ? version.num_of_voices
-        : 0;
-      data.versions[i].accompaniment = version.accompaniment
-        ? version.accompaniment
-        : [];
+    data.versions[i].voices.num_of_voices = version.num_of_voices
+      ? version.num_of_voices
+      : 0;
+    data.versions[i].accompaniment = version.accompaniment
+      ? version.accompaniment
+      : [];
 
     if (res.locals.fileIndexes) {
       if (res.locals.fileNames[i]) {
-        data.versions[i].files.pdf.url =
-          res.locals.fileUrls[i];
+        data.versions[i].files.pdf.url = res.locals.fileUrls[i];
         data.versions[i].files.pdf.thumbnail = fs.readFileSync(
           `${process.cwd()}/tmp/${res.locals.fileNames[i]}.jpg`
         );
@@ -72,8 +131,6 @@ exports.createPiece = (req, res, next) => {
       box: version.box,
     };
   });
-  console.log('parsedBody: ', parsedBody);
-  console.log('data: ', data);
   const piece = new Piece(data);
 
   piece.save((err) => {

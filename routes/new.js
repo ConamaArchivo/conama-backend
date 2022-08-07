@@ -9,12 +9,13 @@ const {
   uploadFilesToDrive,
   getDrivePublicUrls,
 } = require('../controllers/driveController');
-const {createPiece} = require('../controllers/pieceController');
+const {
+  createPiece,
+  getAutoCompleteData,
+} = require('../controllers/pieceController');
 const qs = require('qs');
 
-router.get('/', (req, res, next) => {
-  res.json('pieceList');
-});
+router.get('/', getAutoCompleteData);
 
 router.post(
   '/',
@@ -27,7 +28,7 @@ router.post(
   uploadFilesToDrive,
   getDrivePublicUrls,
   removeTmpFiles,
-  createPiece,
+  createPiece
 );
 
 module.exports = router;
