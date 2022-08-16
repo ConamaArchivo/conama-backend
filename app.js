@@ -3,12 +3,11 @@ require('dotenv').config();
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const helmet = require('helmet');
-const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const fileUpload = require('express-fileupload');
+const cors = require('cors');
 
 const homeRouter = require('./routes/pieces');
 const newRouter = require('./routes/new');
@@ -23,8 +22,7 @@ mongoose.connect(process.env.MONGODB_TEST_URI, {
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-// app.use(helmet({crossOriginResourcePolicy: false,}));
-app.use(compression());
+app.use(cors())
 app.use(logger('dev'));
 app.use(fileUpload());
 app.use(express.json());

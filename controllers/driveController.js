@@ -42,7 +42,8 @@ async function uploadFilesToDrive(req, res, next) {
               : ''
           }`,
           mimeType: 'application/pdf',
-          parents: ['1rmHcnjwmk5-SEHKTRtO4bQUxbMDi0ZuN'], // Archive folder ID
+          // parents: ['1rmHcnjwmk5-SEHKTRtO4bQUxbMDi0ZuN'], // Archive folder ID
+          parents: ['1zjQXdxhEL1G0NjlWZq_X-2FxwJDBDkAx'], // Test folder ID
         },
         media: {
           mimeType: 'application/pdf',

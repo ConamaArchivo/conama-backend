@@ -14,7 +14,7 @@ exports.pieceList = (req, res, next) => {
     });
 };
 
-exports.getAutoCompleteData = (req, res, next) => {
+exports.autoCompleteData = (req, res, next) => {
   Piece.find({
     // versions: { $elemMatch: { accompaniment: { $exists: true, $ne: [] } } },
   })
@@ -29,7 +29,7 @@ exports.getAutoCompleteData = (req, res, next) => {
       data.forEach((element1) => {
         element1.versions.forEach((element2) => {
           element2.accompaniment.forEach((element3) => {
-            accompaniments.push({ value: element3, label: element3 });
+            accompaniments.push(element3);
           });
 
           element2.arr_authors.forEach((element3) => {
@@ -42,7 +42,7 @@ exports.getAutoCompleteData = (req, res, next) => {
       let genres = [];
       data.forEach((element1) => {
         element1.genre.forEach((element2) => {
-          genres.push({ value: element2, label: element2 });
+          genres.push(element2);
         });
       });
 
@@ -60,16 +60,8 @@ exports.getAutoCompleteData = (req, res, next) => {
         surnames: [...new Set(surnames)].sort(),
         arr_names: [...new Set(arr_names)].sort(),
         arr_surnames: [...new Set(arr_surnames)].sort(),
-        genres: genres
-          .filter(
-            (key, i, self) => i === self.findIndex((t) => t.value === key.value)
-          )
-          .sort((a, b) => a.value.localeCompare(b.value)),
-        accompaniments: accompaniments
-          .filter(
-            (key, i, self) => i === self.findIndex((t) => t.value === key.value)
-          )
-          .sort((a, b) => a.value.localeCompare(b.value)),
+        genres: [...new Set(genres)].sort(),
+        accompaniments: [...new Set(accompaniments)].sort(),
       });
     });
 };

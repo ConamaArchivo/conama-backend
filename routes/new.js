@@ -11,11 +11,11 @@ const {
 } = require('../controllers/driveController');
 const {
   createPiece,
-  getAutoCompleteData,
+  autoCompleteData,
 } = require('../controllers/pieceController');
 const qs = require('qs');
 
-router.get('/', getAutoCompleteData);
+router.get('/', autoCompleteData);
 
 router.post(
   '/',
