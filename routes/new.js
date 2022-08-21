@@ -14,11 +14,13 @@ const {
   autoCompleteData,
 } = require('../controllers/pieceController');
 const qs = require('qs');
+const verifyAuth = require('../middleware/verifyAuth')
 
 router.get('/', autoCompleteData);
 
 router.post(
   '/',
+  verifyAuth,
   (req, res, next) => {
     res.locals.parsedBody = qs.parse(req.body);
     next();
