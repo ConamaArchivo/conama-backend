@@ -21,8 +21,12 @@ const refreshRouter = require('./routes/refresh');
 const app = express();
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_TEST_URI, {
-  // mongoose.connect(process.env.MONGODB_ARCHIVE_URI, {
+const mongoURI =
+  process.env.DEV === 'true'
+    ? process.env.MONGODB_TEST_URI
+    : process.env.MONGODB_ARCHIVE_URI;
+
+mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
