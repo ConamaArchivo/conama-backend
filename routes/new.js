@@ -26,7 +26,7 @@ router.post(
     next();
   },
   getFormFiles,
-  createThumbnails,
+  // createThumbnails,
   uploadFilesToDrive,
   getDrivePublicUrls,
   removeTmpFiles,

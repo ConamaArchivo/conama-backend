@@ -109,8 +109,11 @@ exports.createPiece = (req, res, next) => {
     if (res.locals.fileIndexes) {
       if (res.locals.fileNames[i]) {
         data.versions[i].files.pdf.url = res.locals.fileUrls[i];
+        // data.versions[i].files.pdf.thumbnail = fs.readFileSync(
+        //   `${process.cwd()}/tmp/${res.locals.fileNames[i]}.jpg`
+        // );
         data.versions[i].files.pdf.thumbnail = fs.readFileSync(
-          `${process.cwd()}/tmp/${res.locals.fileNames[i]}.jpg`
+          `${process.cwd()}/tmp/thumbnail.jpg`
         );
       }
     }
