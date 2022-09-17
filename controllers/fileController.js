@@ -29,39 +29,40 @@ function getFormFiles(req, res, next) {
 
 function createThumbnails(req, res, next) {
   if (!res.locals.fileNames) return next();
+  let filesNum = 0;
   for (let i = 0; i < res.locals.fileIndexes.length; i++) {
-      const pdfPath = `${process.cwd()}/tmp/${res.locals.fileNames[res.locals.fileIndexes[i]]}.pdf`;
-      const thumbnailName = res.locals.fileNames[res.locals.fileIndexes[i]] + '.jpg';
-      const checkFile = setInterval(() => {
-        const exists = fs.existsSync(pdfPath, 'utf8');
-        if (exists) {
-          gm(pdfPath + '[0]')
-            .setFormat('jpg')
-            .resize(400)
-            .quality(80)
-            .write('tmp/' + thumbnailName, (err) => {
-              if (err) {
-                console.log(
-                  '✗',
-                  'Error creating thumbnail',
-                  thumbnailName,
-                  err
-                );
-              } else {
-                console.log(
-                  '✔',
-                  'Thumbnail',
-                  thumbnailName,
-                  'created successfully '
-                );
-              }
-            });
-          clearInterval(checkFile);
+    const pdfPath = `${process.cwd()}/tmp/${
+      res.locals.fileNames[res.locals.fileIndexes[i]]
+    }.pdf`;
+    const thumbnailName =
+      res.locals.fileNames[res.locals.fileIndexes[i]] + '.jpg';
+    const checkFile = setInterval(() => {
+      const exists = fs.existsSync(pdfPath, 'utf8');
+      if (exists) {
+        filesNum++;
+        gm(pdfPath + '[0]')
+          .setFormat('jpg')
+          .resize(400)
+          .quality(80)
+          .write('tmp/' + thumbnailName, (err) => {
+            if (err) {
+              console.log('✗', 'Error creating thumbnail', thumbnailName, err);
+            } else {
+              console.log(
+                '✔',
+                'Thumbnail',
+                thumbnailName,
+                'created successfully '
+              );
+            }
+          });
+        clearInterval(checkFile);
+        if (res.locals.fileIndexes.length === filesNum) {
+          return next();
         }
-      }, 50);
-    
+      }
+    }, 50);
   }
-  return next();
 }
 
 function removeTmpFiles(req, res, next) {
