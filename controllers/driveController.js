@@ -1,3 +1,4 @@
+const Piece = require('../models/piece');
 const { google } = require('googleapis');
 const fs = require('fs');
 
@@ -119,7 +120,37 @@ async function getDrivePublicUrls(req, res, next) {
   next();
 }
 
+async function getDownloadUrl(req, res, next) {
+  Piece.findById(req.params.id)
+    .select({ versions: 1, _id: 0 })
+    .exec((error, data) => {
+      if (error) {
+        return next(error);
+      }
+      res.json({
+        url: data.versions[req.params.version].files.pdf.url.webContentLink,
+      });
+    });
+}
+
+async function getViewUrl(req, res, next) {
+  Piece.findById(req.params.id)
+    .select({ versions: 1, _id: 0 })
+    .exec((error, data) => {
+      if (error) {
+        return next(error);
+      }
+      console.log(req.params.version);
+      res.json({
+        url: data.versions[req.params.version].files.pdf.url.webRawLink,
+      });
+    });
+}
+
+
 module.exports = {
   uploadFilesToDrive,
   getDrivePublicUrls,
+  getDownloadUrl,
+  getViewUrl
 };

@@ -17,6 +17,7 @@ const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
 const signupRouter = require('./routes/signup');
 const refreshRouter = require('./routes/refresh');
+const pdfRouter = require('./routes/pdf');
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/signup', signupRouter);
 app.use('/refresh', refreshRouter);
+app.use('/pdf', pdfRouter);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

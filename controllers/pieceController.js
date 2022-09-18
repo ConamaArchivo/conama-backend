@@ -10,7 +10,38 @@ exports.pieceList = (req, res, next) => {
       if (error) {
         return next(error);
       }
-      res.json(list);
+      let reducedList = [];
+      list.forEach((piece) => {
+        let reducedPiece = {
+          _id: piece._id,
+          title: piece.title,
+          authors: piece.authors,
+          genre: piece.genre,
+          repertoire: piece.repertoire,
+          comment: piece.comment,
+          versions: [],
+        };
+        piece.versions.forEach((version) => {
+          let newVersion = {
+            arr_authors: version.arr_authors,
+            voices: version.voices,
+            accompaniment: version.accompaniment,
+            files: {
+              quantity: version.files.quantity,
+              location: version.files.location,
+            },
+          };
+          if (version.files.pdf.thumbnail !== undefined) {
+            newVersion.files.pdf = {
+              thumbnail: version.files.pdf.thumbnail,
+            };
+          }
+          reducedPiece.versions.push(newVersion);
+          console.log('newVersion: ', newVersion);
+        });
+        reducedList.push(reducedPiece);
+      });
+      res.json(reducedList);
     });
 };
 
