@@ -11,7 +11,7 @@ const cors = require('cors');
 const credentials = require('./middleware/credentials');
 const corsOptions = require('./config/corsOptions');
 
-const homeRouter = require('./routes/pieces');
+const piecesRouter = require('./routes/pieces');
 const newRouter = require('./routes/new');
 const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
@@ -42,8 +42,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/obras', homeRouter);
-app.use('/nueva-entrada', newRouter);
+app.use('/pieces', piecesRouter);
+app.use('/new', newRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/signup', signupRouter);

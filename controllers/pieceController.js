@@ -37,7 +37,6 @@ exports.pieceList = (req, res, next) => {
             };
           }
           reducedPiece.versions.push(newVersion);
-          console.log('newVersion: ', newVersion);
         });
         reducedList.push(reducedPiece);
       });
